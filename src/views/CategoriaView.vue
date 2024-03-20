@@ -34,6 +34,7 @@ async function excluir(id) {
   categorias.value = await categoriasApi.buscarTodasAsCategorias();
   limpar();
 }
+
 </script>
 
 <template>
