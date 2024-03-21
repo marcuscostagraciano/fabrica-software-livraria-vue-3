@@ -41,4 +41,14 @@ ul {
 ul li {
   text-align: center;
 }
+
+ul li span {
+  cursor: pointer;
+}
+
+ul li button {
+  background-color: red;
+  color: #000;
+  border: #fff 2px solid;
+}
 </style>

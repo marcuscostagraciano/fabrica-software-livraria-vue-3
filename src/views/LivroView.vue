@@ -97,7 +97,7 @@ async function detalhes_livro(id) {
         <li v-for="livro in livros" :key="livro.id">
             <span @click="editar(livro.id)">
                 ({{ livro.id }}) - {{ livro.titulo }} - {{ livro.preco }}
-            </span>
+            </span> -
             <button @click="excluir(livro.id)">X</button>
             <button @click="detalhes_livro(livro.id)">D</button>
         </li>

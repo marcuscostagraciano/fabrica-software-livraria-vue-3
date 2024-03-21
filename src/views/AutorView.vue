@@ -48,10 +48,16 @@ async function excluir(id) {
         <v-btn @click="limpar" class="bg-surface-variant">Limpar</v-btn>
     </v-form>
     <hr />
+
+    <!-- <v-list density="compact" lines="one">
+        <v-list-item v-for="autor in autores" :key="autor.id" :title="autor.email" :subtitle="autor.nome"
+            @click="editar(autor)"><v-btn color="error" @click="excluir(autor.id)">Excluir</v-btn></v-list-item>
+    </v-list> -->
+
     <ul>
         <li v-for="autor in autores" :key="autor.id">
             <span @click="editar(autor)">
-                ({{ autor.id }}) - {{ autor.nome }} - {{ autor.email }}
+                ({{ autor.id }}) - {{ autor.nome }} - {{ autor.email }} -
             </span>
             <button @click="excluir(autor.id)">X</button>
         </li>
