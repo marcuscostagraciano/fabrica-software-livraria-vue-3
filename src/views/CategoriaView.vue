@@ -40,11 +40,12 @@ async function excluir(id) {
 <template>
   <h1>Categoria</h1>
   <hr />
-  <div class="form">
-    <input type="text" v-model="categoria.descricao" placeholder="Descrição" />
-    <button @click="salvar">Salvar</button>
-    <button @click="limpar">Limpar</button>
-  </div>
+  <v-form>
+    <v-text-field v-model="categoria.descricao" name="desc" label="Descrição"></v-text-field>
+
+    <v-btn @click="salvar" class="bg-surface-variant">Salvar</v-btn>
+    <v-btn @click="limpar" class="bg-surface-variant">Limpar</v-btn>
+  </v-form>
   <hr />
   <ul>
     <li v-for="categoria in categorias" :key="categoria.id">

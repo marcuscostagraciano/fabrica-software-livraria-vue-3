@@ -27,11 +27,9 @@ h1 {
   text-align: center;
 }
 
-div.form {
-  width: 80vw;
-  margin: 1vh 0px;
+form.v-form button.v-button {
   display: flex;
-  justify-content: center;
+  align-items: right;
 }
 
 ul {

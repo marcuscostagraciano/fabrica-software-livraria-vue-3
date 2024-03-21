@@ -10,31 +10,31 @@ const defaultLivro = {
 const livros = ref([]);
 const livro = reactive({ ...defaultLivro });
 
-// import CategoriasApi from "@/api/categorias";
-// const categoriasApi = new CategoriasApi();
+import CategoriasApi from "@/api/categorias";
+const categoriasApi = new CategoriasApi();
 
-// const defaultCategoria = { id: null, descricao: "" };
-// const categorias = ref([]);
-// const categoria = reactive({ ...defaultCategoria });
+const defaultCategoria = { id: null, descricao: "" };
+const categorias = ref([]);
+const categoria = reactive({ ...defaultCategoria });
 
-// import AutoresApi from "@/api/autores";
-// const autoresApi = new AutoresApi();
+import AutoresApi from "@/api/autores";
+const autoresApi = new AutoresApi();
 
-// const defaultAutor = { id: null, nome: "", email: "" };
-// const autores = ref([]);
-// const autor = reactive({ ...defaultAutor });
+const defaultAutor = { id: null, nome: "", email: "" };
+const autores = ref([]);
+const autor = reactive({ ...defaultAutor });
 
-// import EditorasApi from "@/api/editoras";
-// const editorasApi = new EditorasApi();
+import EditorasApi from "@/api/editoras";
+const editorasApi = new EditorasApi();
 
-// const defaultEditora = { id: null, nome: "", site: "" };
-// const editoras = ref([]);
-// const editora = reactive({ ...defaultEditora });
+const defaultEditora = { id: null, nome: "", site: "" };
+const editoras = ref([]);
+const editora = reactive({ ...defaultEditora });
 
 onMounted(async () => {
-    // autores.value = await autoresApi.buscarTodosOsAutores();
-    // categorias.value = await categoriasApi.buscarTodasAsCategorias();
-    // editoras.value = await editorasApi.buscarTodasAsEditoras();
+    autores.value = await autoresApi.buscarTodosOsAutores();
+    categorias.value = await categoriasApi.buscarTodasAsCategorias();
+    editoras.value = await editorasApi.buscarTodasAsEditoras();
     livros.value = await livrosApi.buscarTodosOsLivros();
 });
 
@@ -62,6 +62,11 @@ async function excluir(id) {
     limpar();
 }
 
+async function detalhes_livro(id) {
+    const detalhes = await livrosApi.getLivro(id);
+    console.log(detalhes)
+}
+
 </script>
 
 <template>
@@ -69,19 +74,20 @@ async function excluir(id) {
     <hr />
     <div class="form">
         <input type="text" v-model="livro.titulo" placeholder="Titulo" />
-        <!-- <input type="text" v-model="livro.isbn" placeholder="ISBN" /> -->
-        <!-- <input type="text" v-model="livro.quantidade" placeholder="Quantidade" /> -->
+        <input type="text" v-model="livro.isbn" placeholder="ISBN" />
+        <input type="text" v-model="livro.quantidade" placeholder="Quantidade" />
         <input type="text" v-model="livro.preco" placeholder="Preço" />
 
-        <!-- <select name="categorias" id="categorias">
-            <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.descricao }}</option>
+        <select name="categorias" id="categorias">
+            <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.id }} - {{ categoria.descricao }}
+            </option>
         </select>
         <select name="editoras" id="editoras">
-            <option v-for="editora in editoras" :value="editora.id">{{ editora.nome }}</option>
+            <option v-for="editora in editoras" :value="editora.id">{{ editora.id }} - {{ editora.nome }}</option>
         </select>
-        <select name="autores" id="autores">
-            <option v-for="autor in autores" :value="autor.id">{{ autor.nome }}</option>
-        </select> -->
+        <select name="autores" id="autores" multiple>
+            <option v-for="autor in autores" :value="autor.id">{{ autor.id }} - {{ autor.nome }}</option>
+        </select>
 
         <button @click="salvar">Salvar</button>
         <button @click="limpar">Limpar</button>
@@ -89,12 +95,17 @@ async function excluir(id) {
     <hr />
     <ul>
         <li v-for="livro in livros" :key="livro.id">
-            <span @click="editar(livro)">
+            <span @click="editar(livro.id)">
                 ({{ livro.id }}) - {{ livro.titulo }} - {{ livro.preco }}
             </span>
             <button @click="excluir(livro.id)">X</button>
+            <button @click="detalhes_livro(livro.id)">D</button>
         </li>
     </ul>
 </template>
 
-<style></style>
+<style scoped>
+select#autores:hover {
+    background-color: yellow;
+}
+</style>

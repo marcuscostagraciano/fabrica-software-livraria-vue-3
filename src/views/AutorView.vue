@@ -40,12 +40,13 @@ async function excluir(id) {
 <template>
     <h1>Autor</h1>
     <hr />
-    <div class="form">
-        <input type="text" v-model="autor.nome" placeholder="Nome" />
-        <input type="text" v-model="autor.email" placeholder="Email" />
-        <button @click="salvar">Salvar</button>
-        <button @click="limpar">Limpar</button>
-    </div>
+    <v-form>
+        <v-text-field v-model="autor.nome" name="name" label="Nome"></v-text-field>
+        <v-text-field v-model="autor.email" name="name" label="Email"></v-text-field>
+
+        <v-btn @click="salvar" class="bg-surface-variant">Salvar</v-btn>
+        <v-btn @click="limpar" class="bg-surface-variant">Limpar</v-btn>
+    </v-form>
     <hr />
     <ul>
         <li v-for="autor in autores" :key="autor.id">

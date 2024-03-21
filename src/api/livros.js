@@ -17,4 +17,8 @@ export default class LivrosApi {
     const { data } = await axios.delete(`/livros/${id}/`);
     return data.results;
   }
+  async getLivro(id) {
+    const { data } = await axios.get(`/livros/${id}/`);
+    return data;
+  }
 }
