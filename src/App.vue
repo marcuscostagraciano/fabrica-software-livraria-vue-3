@@ -1,14 +1,10 @@
 <script setup>
-import { routes } from './router'
+import Header from './components/Header.vue';
 
 </script>
 
 <template>
-  <header>
-    <a v-for="route in routes" id="navbar">
-      <router-link :to="route.path">{{ route.name }}</router-link> |
-    </a>
-  </header>
+  <Header />
   <main>
     <RouterView />
   </main>
