@@ -1,17 +1,22 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import AutoresApi from "@/api/autores";
-const autoresApi = new AutoresApi();
 
+import AutoresApi from "@/api/autores";
+
+
+const autoresApi = new AutoresApi();
 const defaultAutor = { id: null, nome: "", email: "" };
 const autores = ref([]);
 const autor = reactive({ ...defaultAutor });
+
+const isEditando = ref(false)
 
 onMounted(async () => {
     autores.value = await autoresApi.buscarTodosOsAutores();
 });
 
 function limpar() {
+    isEditando.value = false
     Object.assign(autor, { ...defaultAutor });
 }
 
@@ -26,6 +31,7 @@ async function salvar() {
 }
 
 function editar(autor_para_editar) {
+    isEditando.value = true
     Object.assign(autor, autor_para_editar);
 }
 
@@ -40,20 +46,19 @@ async function excluir(id) {
 <template>
     <h1>Autor</h1>
     <hr />
-    <v-form>
+    <v-form class="mx-6">
         <v-text-field v-model="autor.nome" name="name" label="Nome"></v-text-field>
         <v-text-field v-model="autor.email" name="name" label="Email"></v-text-field>
 
-        <v-btn @click="salvar" class="bg-surface-variant">Salvar</v-btn>
-        <v-btn @click="limpar" class="bg-surface-variant">Limpar</v-btn>
+        <v-container class="d-flex justify-center">
+            <v-btn @click="salvar" class="bg-surface-variant">
+                <p v-if="!isEditando">Adicionar</p>
+                <p v-else>Atualizar</p>
+            </v-btn>
+            <v-btn @click="limpar" class="bg-surface-variant">Limpar</v-btn>
+        </v-container>
     </v-form>
     <hr />
-
-    <!-- <v-list density="compact" lines="one">
-        <v-list-item v-for="autor in autores" :key="autor.id" :title="autor.email" :subtitle="autor.nome"
-            @click="editar(autor)"><v-btn color="error" @click="excluir(autor.id)">Excluir</v-btn></v-list-item>
-    </v-list> -->
-
     <ul>
         <li v-for="autor in autores" :key="autor.id">
             <span @click="editar(autor)">

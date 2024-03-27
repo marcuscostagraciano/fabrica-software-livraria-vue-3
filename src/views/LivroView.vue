@@ -1,35 +1,28 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
+
+import AutoresApi from "@/api/autores";
+import CategoriasApi from "@/api/categorias";
+import EditorasApi from "@/api/editoras";
 import LivrosApi from "@/api/livros";
+
+const autoresApi = new AutoresApi();
+const categoriasApi = new CategoriasApi();
+const editorasApi = new EditorasApi();
 const livrosApi = new LivrosApi();
 
 const defaultLivro = {
     id: null, titulo: "", isbn: "", quantidade: null,
     preco: "", categoria: null, editora: null, autores: null
 };
-const livros = ref([]);
 const livro = reactive({ ...defaultLivro });
 
-import CategoriasApi from "@/api/categorias";
-const categoriasApi = new CategoriasApi();
-
-const defaultCategoria = { id: null, descricao: "" };
-const categorias = ref([]);
-const categoria = reactive({ ...defaultCategoria });
-
-import AutoresApi from "@/api/autores";
-const autoresApi = new AutoresApi();
-
-const defaultAutor = { id: null, nome: "", email: "" };
 const autores = ref([]);
-const autor = reactive({ ...defaultAutor });
-
-import EditorasApi from "@/api/editoras";
-const editorasApi = new EditorasApi();
-
-const defaultEditora = { id: null, nome: "", site: "" };
+const categorias = ref([]);
 const editoras = ref([]);
-const editora = reactive({ ...defaultEditora });
+const livros = ref([]);
+
+const isEditando = ref(false)
 
 onMounted(async () => {
     autores.value = await autoresApi.buscarTodosOsAutores();
@@ -39,6 +32,7 @@ onMounted(async () => {
 });
 
 function limpar() {
+    isEditando.value = false
     Object.assign(livro, { ...defaultLivro });
 }
 
@@ -53,6 +47,7 @@ async function salvar() {
 }
 
 function editar(livro_para_editar) {
+    isEditando.value = true
     Object.assign(livro, livro_para_editar);
 }
 
@@ -72,34 +67,36 @@ async function detalhes_livro(id) {
 <template>
     <h1>Livro</h1>
     <hr />
-    <div class="form">
-        <input type="text" v-model="livro.titulo" placeholder="Titulo" />
-        <input type="text" v-model="livro.isbn" placeholder="ISBN" />
-        <input type="text" v-model="livro.quantidade" placeholder="Quantidade" />
-        <input type="text" v-model="livro.preco" placeholder="Preço" />
+    <v-form class="mx-6">
+        <v-text-field v-model="livro.titulo" name="titulo" label="Titulo"></v-text-field>
+        <v-text-field v-model="livro.isbn" name="isbn" label="ISBN"></v-text-field>
+        <v-text-field v-model="livro.quantidade" name="quantidade" label="Quantidade" type="number"></v-text-field>
+        <v-text-field v-model="livro.preco" name="preco" label="Preço"></v-text-field>
 
-        <select name="categorias" id="categorias">
-            <option v-for="categoria in categorias" :value="categoria.id">{{ categoria.id }} - {{ categoria.descricao }}
-            </option>
-        </select>
-        <select name="editoras" id="editoras">
-            <option v-for="editora in editoras" :value="editora.id">{{ editora.id }} - {{ editora.nome }}</option>
-        </select>
-        <select name="autores" id="autores" multiple>
-            <option v-for="autor in autores" :value="autor.id">{{ autor.id }} - {{ autor.nome }}</option>
-        </select>
+        <v-select :items="categorias" item-title="descricao" item-value="id" v-model="livro.categoria"
+            label="Categoria"></v-select>
+        <v-select :items="editoras" item-title="nome" item-value="id" v-model="livro.editora"
+            label="Editora"></v-select>
+        <v-select :items="autores" item-title="nome" item-value="id" v-model="livro.autor" label="Autor" multiple
+            clearable></v-select>
 
-        <button @click="salvar">Salvar</button>
-        <button @click="limpar">Limpar</button>
-    </div>
+        <v-container class="d-flex justify-center">
+            <v-btn @click="salvar" class="bg-surface-variant">
+                <p v-if="!isEditando">Adicionar</p>
+                <p v-else>Atualizar</p>
+            </v-btn>
+            <v-btn @click="limpar" class="bg-surface-variant">Limpar</v-btn>
+        </v-container>
+    </v-form>
     <hr />
     <ul>
         <li v-for="livro in livros" :key="livro.id">
-            <span @click="editar(livro.id)">
+            <span @click="editar(livro)">
+                <!-- <span @click="console.log('A')"> -->
                 ({{ livro.id }}) - {{ livro.titulo }} - {{ livro.preco }}
             </span> -
             <button @click="excluir(livro.id)">X</button>
-            <button @click="detalhes_livro(livro.id)">D</button>
+            <!-- <button @click="detalhes_livro(livro.id)">D</button> -->
         </li>
     </ul>
 </template>

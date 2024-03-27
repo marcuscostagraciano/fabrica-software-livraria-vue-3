@@ -1,17 +1,22 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import EditorasApi from "@/api/editoras";
-const editorasApi = new EditorasApi();
 
+import EditorasApi from "@/api/editoras";
+
+
+const editorasApi = new EditorasApi();
 const defaultEditora = { id: null, nome: "", site: "" };
 const editoras = ref([]);
 const editora = reactive({ ...defaultEditora });
+
+const isEditando = ref(false)
 
 onMounted(async () => {
   editoras.value = await editorasApi.buscarTodasAsEditoras();
 });
 
 function limpar() {
+  isEditando.value = false
   Object.assign(editora, { ...defaultEditora });
 }
 
@@ -26,6 +31,7 @@ async function salvar() {
 }
 
 function editar(editora_para_editar) {
+  isEditando.value = true
   Object.assign(editora, editora_para_editar);
 }
 
@@ -39,12 +45,17 @@ async function excluir(id) {
 <template>
   <h1>Editora</h1>
   <hr />
-  <v-form>
+  <v-form class="mx-6">
     <v-text-field v-model="editora.nome" name="name" label="Nome"></v-text-field>
     <v-text-field v-model="editora.site" name="site" label="Site"></v-text-field>
 
-    <v-btn @click="salvar" class="bg-surface-variant">Salvar</v-btn>
-    <v-btn @click="limpar" class="bg-surface-variant">Limpar</v-btn>
+    <v-container class="d-flex justify-center">
+      <v-btn @click="salvar" class="bg-surface-variant">
+        <p v-if="!isEditando">Adicionar</p>
+        <p v-else>Atualizar</p>
+      </v-btn>
+      <v-btn @click="limpar" class="bg-surface-variant">Limpar</v-btn>
+    </v-container>
   </v-form>
   <hr />
   <ul>
