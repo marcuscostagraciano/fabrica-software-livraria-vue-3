@@ -3,7 +3,7 @@ import axios from "axios";
 export default class LivrosApi {
   async buscarTodosOsLivros() {
     const { data } = await axios.get("/livros/");
-    return data;
+    return data.results;
   }
   async adicionarLivro(livro) {
     const { data } = await axios.post("/livros/", livro);
@@ -19,6 +19,6 @@ export default class LivrosApi {
   }
   async getLivro(id) {
     const { data } = await axios.get(`/livros/${id}/`);
-    return data;
+    return data.results;
   }
 }
