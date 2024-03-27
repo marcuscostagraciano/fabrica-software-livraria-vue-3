@@ -1,6 +1,8 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 
+import TableHeaderList from "@/components/TableHeaderList.vue"
+
 import AutoresApi from "@/api/autores";
 
 
@@ -41,6 +43,10 @@ async function excluir(id) {
     limpar();
 }
 
+const theader_text = [
+    "nome", "email"
+]
+
 </script>
 
 <template>
@@ -59,14 +65,18 @@ async function excluir(id) {
         </v-container>
     </v-form>
     <hr />
-    <ul>
-        <li v-for="autor in autores" :key="autor.id">
-            <span @click="editar(autor)">
-                ({{ autor.id }}) - {{ autor.nome }} - {{ autor.email }} -
-            </span>
-            <button @click="excluir(autor.id)">X</button>
-        </li>
-    </ul>
+    <v-table density="comfortable">
+        <TableHeaderList :th_text="theader_text" />
+        <tbody>
+            <tr v-for="autor in autores" :key="autor.nome" @click="editar(autor)">
+                <td>{{ autor.id }}</td>
+                <td>{{ autor.nome }}</td>
+                <td>{{ autor.email }}</td>
+                <td><button @click="excluir(autor.id)" class="excluir">X</button></td>
+            </tr>
+        </tbody>
+    </v-table>
+
 </template>
 
 <style></style>

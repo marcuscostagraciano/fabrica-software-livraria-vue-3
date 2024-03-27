@@ -47,4 +47,13 @@ ul li button {
   color: #000;
   border: #fff 2px solid;
 }
+
+.v-table {
+  text-align: center;
+}
+
+.excluir {
+  height: 90%;
+  width: 90%;
+}
 </style>
