@@ -1,6 +1,8 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 
+import TableHeaderList from "@/components/TableHeaderList.vue"
+
 import CategoriasApi from "@/api/categorias";
 
 
@@ -41,6 +43,10 @@ async function excluir(id) {
   limpar();
 }
 
+const theader_text = [
+  "descrição"
+]
+
 </script>
 
 <template>
@@ -58,14 +64,17 @@ async function excluir(id) {
     </v-container>
   </v-form>
   <hr />
-  <ul>
-    <li v-for="categoria in categorias" :key="categoria.id">
-      <span @click="editar(categoria)">
-        ({{ categoria.id }}) - {{ categoria.descricao }} -
-      </span>
-      <button @click="excluir(categoria.id)">X</button>
-    </li>
-  </ul>
+
+  <v-table density="comfortable">
+    <TableHeaderList :th_text="theader_text" />
+    <tbody>
+      <tr v-for="categoria in categorias" :key="categoria.nome" @click="editar(categoria)">
+        <td>{{ categoria.id }}</td>
+        <td>{{ categoria.descricao }}</td>
+        <td><button @click="excluir(categoria.id)" class="excluir">X</button></td>
+      </tr>
+    </tbody>
+  </v-table>
 </template>
 
 <style></style>

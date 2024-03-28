@@ -71,7 +71,8 @@ const theader_text = [
             <tr v-for="autor in autores" :key="autor.nome" @click="editar(autor)">
                 <td>{{ autor.id }}</td>
                 <td>{{ autor.nome }}</td>
-                <td>{{ autor.email }}</td>
+                <td v-if="autor.email">{{ autor.email }}</td>
+                <td v-else> - - - </td>
                 <td><button @click="excluir(autor.id)" class="excluir">X</button></td>
             </tr>
         </tbody>

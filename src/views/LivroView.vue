@@ -1,6 +1,8 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 
+import TableHeaderList from "@/components/TableHeaderList.vue"
+
 import AutoresApi from "@/api/autores";
 import CategoriasApi from "@/api/categorias";
 import EditorasApi from "@/api/editoras";
@@ -37,6 +39,7 @@ function limpar() {
 }
 
 async function salvar() {
+    console.log(livro);
     if (livro.id) {
         await livrosApi.atualizarLivro(livro);
     } else {
@@ -61,6 +64,10 @@ async function detalhes_livro(id) {
     const detalhes = await livrosApi.getLivro(id);
     console.log(detalhes)
 }
+
+const theader_text = [
+    "titulo", "preço"
+]
 
 </script>
 
@@ -89,20 +96,19 @@ async function detalhes_livro(id) {
         </v-container>
     </v-form>
     <hr />
-    <ul>
-        <li v-for="livro in livros" :key="livro.id">
-            <span @click="editar(livro)">
-                <!-- <span @click="console.log('A')"> -->
-                ({{ livro.id }}) - {{ livro.titulo }} - {{ livro.preco }}
-            </span> -
-            <button @click="excluir(livro.id)">X</button>
-            <!-- <button @click="detalhes_livro(livro.id)">D</button> -->
-        </li>
-    </ul>
+
+    <v-table density="comfortable">
+        <TableHeaderList :th_text="theader_text" />
+        <tbody>
+            <tr v-for="livro in livros" :key="livro.nome" @click="editar(livro)">
+                <td>{{ livro.id }}</td>
+                <td>{{ livro.titulo }}</td>
+                <td v-if="livro.preco">R$ {{ livro.preco }}</td>
+                <td v-else> - - - </td>
+                <td><button @click="excluir(livro.id)" class="excluir">X</button></td>
+            </tr>
+        </tbody>
+    </v-table>
 </template>
 
-<style scoped>
-select#autores:hover {
-    background-color: yellow;
-}
-</style>
+<style scoped></style>

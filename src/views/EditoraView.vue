@@ -1,6 +1,8 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 
+import TableHeaderList from "@/components/TableHeaderList.vue"
+
 import EditorasApi from "@/api/editoras";
 
 
@@ -40,6 +42,11 @@ async function excluir(id) {
   editoras.value = await editorasApi.buscarTodasAsEditoras();
   limpar();
 }
+
+const theader_text = [
+  "nome", "site"
+]
+
 </script>
 
 <template>
@@ -58,14 +65,19 @@ async function excluir(id) {
     </v-container>
   </v-form>
   <hr />
-  <ul>
-    <li v-for="editora in editoras" :key="editora.id">
-      <span @click="editar(editora)">
-        ({{ editora.id }}) - {{ editora.nome }} - {{ editora.site }} -
-      </span>
-      <button @click="excluir(editora.id)">X</button>
-    </li>
-  </ul>
+
+  <v-table density="comfortable">
+    <TableHeaderList :th_text="theader_text" />
+    <tbody>
+      <tr v-for="editora in editoras" :key="editora.nome" @click="editar(editora)">
+        <td>{{ editora.id }}</td>
+        <td>{{ editora.nome }}</td>
+        <td v-if="editora.site">{{ editora.site }}</td>
+        <td v-else> - - - </td>
+        <td><button @click="excluir(editora.id)" class="excluir">X</button></td>
+      </tr>
+    </tbody>
+  </v-table>
 </template>
 
 <style></style>
