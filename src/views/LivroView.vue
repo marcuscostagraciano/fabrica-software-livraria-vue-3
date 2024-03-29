@@ -39,8 +39,21 @@ function limpar() {
 }
 
 async function salvar() {
-    console.log(livro);
     if (livro.id) {
+        console.log(livro);
+        for (const field in livro) {
+            if (livro[field] && typeof (livro[field]) === "object") {
+                if (field == "autores") {
+                    livro[field] = livro[field].map(autor => { return autor.id })
+                }
+                for (const subfield in livro[field]) {
+                    if (subfield == "id") {
+                        livro[field] = livro[field][subfield]
+                    }
+                }
+            }
+        }
+
         await livrosApi.atualizarLivro(livro);
     } else {
         await livrosApi.adicionarLivro(livro);
@@ -49,8 +62,11 @@ async function salvar() {
     limpar();
 }
 
-function editar(livro_para_editar) {
+async function editar(livro_para_editar) {
     isEditando.value = true
+
+    // Retorna mais campos que os mostrados na listagem
+    livro_para_editar = await detalhes_livro(livro_para_editar.id);
     Object.assign(livro, livro_para_editar);
 }
 
@@ -62,7 +78,7 @@ async function excluir(id) {
 
 async function detalhes_livro(id) {
     const detalhes = await livrosApi.getLivro(id);
-    console.log(detalhes)
+    return detalhes
 }
 
 const theader_text = [
@@ -84,8 +100,13 @@ const theader_text = [
             label="Categoria"></v-select>
         <v-select :items="editoras" item-title="nome" item-value="id" v-model="livro.editora"
             label="Editora"></v-select>
-        <v-select :items="autores" item-title="nome" item-value="id" v-model="livro.autor" label="Autor" multiple
-            clearable></v-select>
+
+        <!-- Problemas com alteração de autores -->
+        <!-- <v-select :items="autores" item-title="nome" item-value="id" v-model="livro.autores" label="Autor" multiple
+            clearable></v-select> -->
+        <v-select v-if="!livro.id" :items="autores" item-title="nome" item-value="id" v-model="livro.autores"
+            label="Autor" multiple clearable></v-select>
+
 
         <v-container class="d-flex justify-center">
             <v-btn @click="salvar" class="bg-surface-variant">
