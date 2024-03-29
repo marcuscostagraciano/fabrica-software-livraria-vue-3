@@ -19,6 +19,6 @@ export default class LivrosApi {
   }
   async getLivro(id) {
     const { data } = await axios.get(`/livros/${id}/`);
-    return data.results;
+    return data;
   }
 }
